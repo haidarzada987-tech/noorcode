@@ -357,10 +357,12 @@ img {
   font-size: 0.85rem; color: var(--gray-2);
   backdrop-filter: blur(8px);
 }
-logo-text{
-  width: 100px;
-  height: 100px;
-
+.logo-text img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
 }
 .about-content { }
 .about-lead { font-size: 1.1rem; color: var(--gray-1); margin-bottom: 1rem; line-height: 1.7; }
