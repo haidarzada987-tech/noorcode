@@ -177,27 +177,28 @@ if (contactForm) {
   });
 
   contactForm.addEventListener('submit', e => {
-    e.preventDefault();
-
     const validName = validateField('name', 'nameError', v => v.length >= 2, 'Please enter your full name.');
     const validEmail = validateField('email', 'emailError', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), 'Please enter a valid email address.');
     const validProject = validateField('project', 'projectError', v => v !== '', 'Please select a project type.');
     const validMessage = validateField('message', 'messageError', v => v.length >= 20, 'Please describe your project (min 20 characters).');
 
-    if (validName && validEmail && validProject && validMessage) {
-      const btn = contactForm.querySelector('button[type="submit"]');
-      btn.disabled = true;
-      btn.textContent = 'Sending...';
-
-      setTimeout(() => {
-        formSuccess && formSuccess.classList.add('visible');
-        contactForm.reset();
-        btn.disabled = false;
-        btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg> Send Message`;
-        setTimeout(() => formSuccess && formSuccess.classList.remove('visible'), 6000);
-      }, 1200);
+    if (!(validName && validEmail && validProject && validMessage)) {
+      e.preventDefault();
+      return;
     }
+    // Valid: let the browser POST the form to FormSubmit, which emails the
+    // message to the site owner's Gmail. FormSubmit redirects back here
+    // with ?sent=1 (see the hidden _next field in index.html).
+    const btn = contactForm.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
   });
+
+  // Show the success note after FormSubmit redirects back with ?sent=1
+  if (new URLSearchParams(window.location.search).get('sent') === '1') {
+    formSuccess && formSuccess.classList.add('visible');
+    setTimeout(() => formSuccess && formSuccess.classList.remove('visible'), 8000);
+  }
 }
 
 /* ---- Active nav link on scroll ---- */
